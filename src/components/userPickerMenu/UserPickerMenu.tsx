@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import UserPickerBtn from "../userPickerBtn/UserPickerBtn";
+import { messageStore } from "../../stores/messageStore";
 
 interface UserData {
   userName: string;
@@ -8,9 +9,7 @@ interface UserData {
 }
 
 export default function UserPickerMenu() {
-  const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedUser, setSelectedUser] = useState("");
 
   useEffect(() => {
     const getMockData = async () => {
@@ -44,11 +43,11 @@ export default function UserPickerMenu() {
           },
         ];
 
-        setUserData(mockUserList);
+        messageStore.setUser(mockUserList.map(({userName, userPicture}) => ({userName, userPicture})))
 
         const checkedUser = mockUserList.find((user) => user.checked);
         if (checkedUser) {
-          setSelectedUser(checkedUser.userName);
+          messageStore.setSelectedUser(checkedUser.userName)
         }
       } catch (error) {
         console.error(error);
@@ -61,7 +60,7 @@ export default function UserPickerMenu() {
   }, []);
 
   const handleChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedUser(e.target.value);
+    messageStore.setSelectedUser(e.target.value);
   };
 
   return (
@@ -73,12 +72,12 @@ export default function UserPickerMenu() {
           <div className="rounded-full bg-gray-200 h-24 w-24"></div>
         </div>
       ) : (
-        userData.map((user) => (
+       messageStore.users.map((user) => (
           <UserPickerBtn
             key={user.userName}
             userName={user.userName}
             userPicture={user.userPicture}
-            checked={selectedUser === user.userName}
+            checked={messageStore.selectedUser === user.userName}
             onChange={handleChangeUser}
           />
         ))
