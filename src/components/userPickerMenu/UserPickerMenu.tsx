@@ -2,12 +2,6 @@ import { useEffect, useState } from "react";
 import UserPickerBtn from "../userPickerBtn/UserPickerBtn";
 import { messageStore } from "../../stores/messageStore";
 
-interface UserData {
-  userName: string;
-  userPicture: string;
-  checked?: boolean;
-}
-
 export default function UserPickerMenu() {
   const [loading, setLoading] = useState(true);
 
@@ -43,11 +37,16 @@ export default function UserPickerMenu() {
           },
         ];
 
-        messageStore.setUser(mockUserList.map(({userName, userPicture}) => ({userName, userPicture})))
+        messageStore.setUser(
+          mockUserList.map(({ userName, userPicture }) => ({
+            userName,
+            userPicture,
+          }))
+        );
 
         const checkedUser = mockUserList.find((user) => user.checked);
         if (checkedUser) {
-          messageStore.setSelectedUser(checkedUser.userName)
+          messageStore.setSelectedUser(checkedUser.userName);
         }
       } catch (error) {
         console.error(error);
@@ -72,7 +71,7 @@ export default function UserPickerMenu() {
           <div className="rounded-full bg-gray-200 h-24 w-24"></div>
         </div>
       ) : (
-       messageStore.users.map((user) => (
+        messageStore.users.map((user) => (
           <UserPickerBtn
             key={user.userName}
             userName={user.userName}
