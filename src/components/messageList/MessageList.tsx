@@ -8,6 +8,7 @@ export default observer(function MessageList() {
       {messageStore.messages.map((message) => (
         <Message
           key={message.id}
+          id={message.id}
           userPicture={message.userPicture}
           userName={message.userName}
           messageText={message.messageText}
