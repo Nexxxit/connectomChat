@@ -9,7 +9,7 @@ export default function UserPickerBtn({
   userName,
   userPicture,
   checked = false,
-  onChange
+  onChange,
 }: UserProps) {
   return (
     <div className="flex items-center justify-center">

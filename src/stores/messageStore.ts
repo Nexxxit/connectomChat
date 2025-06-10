@@ -7,6 +7,7 @@ interface User {
 
 interface Message {
   id: number;
+  userPicture: string;
   userName: string;
   messageText: string;
   timestamp: Date;
@@ -15,22 +16,25 @@ interface Message {
 
 class MessageStore {
   users: User[] = [];
-  message: Message[] = [];
-  selectedUser: string = "";
+  messages: Message[] = [];
+  selectedUser: User | null = null;
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  setUser(users: User[]) {
+  setUsers(users: User[]) {
     this.users = users;
     if (users.length > 0 && !this.selectedUser) {
-      this.selectedUser = users[0].userName;
+      this.selectedUser = users[0];
     }
   }
 
   setSelectedUser(userName: string) {
-    this.selectedUser = userName;
+    const user = this.users.find((u) => u.userName === userName);
+    if (user) {
+      this.selectedUser = user;
+    }
   }
 
   addMessage(messageText: string) {
@@ -38,16 +42,17 @@ class MessageStore {
 
     const newMessage: Message = {
       id: Date.now(),
-      userName: this.selectedUser,
+      userPicture: this.selectedUser.userPicture,
+      userName: this.selectedUser.userName,
       messageText: messageText.trim(),
       timestamp: new Date(),
     };
 
-    this.message.push(newMessage);
+    this.messages.push(newMessage);
   }
 
   deleteMessage(id: number) {
-    this.message = this.message.filter((msg) => msg.id !== id);
+    this.messages = this.messages.filter((message) => message.id !== id);
   }
 }
 

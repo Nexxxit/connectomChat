@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import UserPickerBtn from "../userPickerBtn/UserPickerBtn";
 import { messageStore } from "../../stores/messageStore";
+import { observer } from "mobx-react-lite";
 
-export default function UserPickerMenu() {
+export default observer(function UserPickerMenu() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,12 +38,7 @@ export default function UserPickerMenu() {
           },
         ];
 
-        messageStore.setUser(
-          mockUserList.map(({ userName, userPicture }) => ({
-            userName,
-            userPicture,
-          }))
-        );
+        messageStore.setUsers(mockUserList);
 
         const checkedUser = mockUserList.find((user) => user.checked);
         if (checkedUser) {
@@ -76,11 +72,11 @@ export default function UserPickerMenu() {
             key={user.userName}
             userName={user.userName}
             userPicture={user.userPicture}
-            checked={messageStore.selectedUser === user.userName}
+            checked={messageStore.selectedUser?.userName === user.userName}
             onChange={handleChangeUser}
           />
         ))
       )}
     </aside>
   );
-}
+});
