@@ -1,1 +1,17 @@
-@import "tailwindcss";
+@import "tailwindcss" layer(base);
+
+@layer utilities {
+  .custom-scrollbar {
+    scrollbar-color: #6B7280 transparent;
+    scrollbar-width: thin;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-2;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-500 rounded-[6px] transition-colors;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-700 rounded-[3px];
+  }
+}
