@@ -48,7 +48,7 @@ class MessageStore {
       timestamp: new Date(),
     };
 
-    this.messages.push(newMessage);
+    this.messages = [...this.messages, newMessage];
   }
 
   deleteMessage(id: number) {
