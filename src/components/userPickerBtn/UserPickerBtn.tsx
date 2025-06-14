@@ -12,15 +12,22 @@ export default function UserPickerBtn({
   onChange,
 }: UserProps) {
   return (
-    <div className="flex items-center justify-center">
+    <div
+      className={`flex items-center justify-center transition-all
+  duration-300 ${checked ? "scale-105" : "scale-100"}`}
+    >
       <div
         className={`
     w-24 h-24 rounded-full overflow-hidden 
-    outline-offset-3
+    outline-offset-3 transition-all
+    duration-300  bg-gray-800/30
+    backdrop-blur-sm
+    border
+    ${checked ? "border-teal-400/50" : "border-gray-700/30"}
     ${
       checked
-        ? "outline outline-2 outline-indigo-100"
-        : "hover:outline hover:outline-2 hover:outline-indigo-300"
+        ? "shadow-[0_0_15px_3px_rgba(16,185,129,0.4)]"
+        : "hover:shadow-[0_0_10px_2px_rgba(255,255,255,0.1)]"
     }
   `}
       >
@@ -34,7 +41,11 @@ export default function UserPickerBtn({
             checked={checked}
           />
           <img
-            className="object-cover w-full h-full pointer-events-none"
+            className={`object-cover w-full h-full pointer-events-none transition-all
+          duration-500
+          ${checked ? "grayscale-0" : "grayscale-[30%]"}
+          ${checked ? "brightness-110" : "brightness-90"}
+          ${checked ? "scale-105" : "scale-100"}`}
             src={userPicture}
             alt="userPicture"
           />
