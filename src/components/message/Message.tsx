@@ -1,8 +1,9 @@
 import { observer } from "mobx-react-lite";
-import { messageStore } from "../../stores/messageStore";
+import { useEffect, useRef, useState } from "react";
+import MessageContextMenu from "../messageContextMenu/MessageContextMenu";
 
 interface MessageProps {
-  id: number,
+  id: number;
   userPicture: string;
   userName: string;
   messageText: string;
@@ -18,6 +19,51 @@ export default observer(function Message({
   timestamp,
 }: MessageProps) {
   // const [addedFile, setAddedFile] = useState<File | null>()
+  const [isMenuOpen, setMenuOpen] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = (e: Event) => {
+      if (isMenuOpen) e.preventDefault();
+    };
+
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+      document.addEventListener("scroll", handleScroll, { passive: false });
+      document.addEventListener("wheel", handleScroll, { passive: false });
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+      document.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("wheel", handleScroll);
+    };
+  }, [isMenuOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const isOutsideMenu =
+        menuRef.current && !menuRef.current.contains(event.target as Node);
+
+      if (isOutsideMenu) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setMenuOpen(true);
+
+    setMenuPosition({
+      x: e.clientX,
+      y: e.clientY,
+    });
+  };
 
   const formatDate = (date: Date) => {
     return date.toLocaleString("ru-RU", {
@@ -31,52 +77,50 @@ export default observer(function Message({
     });
   };
 
-
-  const handleDeleteMessage = (id:number) => {
-    messageStore.deleteMessage(id);
-  }
-
   return (
-    <span
-      className={`${
-        userName === "Bot" ? "bg-red-300 me-10" : "bg-blue-300 ms-10"
-      } rounded-3xl p-3 flex flex-col gap-3 shadow-xl`}
-    >
-      <div className="flex items-center justify-between">
-        <span className="flex items-center">
+    <>
+      <div
+        className={`${
+          userName === "Bot"
+            ? "bg-white text-gray-900 me-10"
+            : "bg-teal-500 text-white ms-10"
+        } relative rounded-3xl p-3 flex flex-col gap-3 shadow-lg
+  backdrop-blur-sm
+  bg-opacity-90`}
+        onContextMenu={handleContextMenu}
+      >
+        <div className="flex items-center">
           <img
-          className="rounded-full mr-2 w-8 h-8"
-          src={userPicture}
-          alt={`${userName} picture`}
-        />
-        <span
-          className={`${
-            userName === "Bot" ? "text-red-300" : "text-indigo-700"
-          } font-bold`}
-        >
-          {userName}
-        </span>
-        </span>
-        <button type="button" className="flex items-center justify-center w-8 h-8 cursor-pointer" onClick={() => handleDeleteMessage(id)}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-trash3"
-            viewBox="0 0 16 16"
+            className="rounded-full mr-2 w-8 h-8"
+            src={userPicture}
+            alt={`${userName} picture`}
+          />
+          <span
+            className={`${
+              userName === "Bot"
+                ? "text-indigo-300 font-medium"
+                : "text-white/90 text-shadow-[0_1px_1px_rgba(0,0,0,0.3)]"
+            } font-bold`}
           >
-            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
-          </svg>
-        </button>
-      </div>
-      {/* {addedFile && (
+            {userName}
+          </span>
+        </div>
+        {/* {addedFile && (
                 <div>
                     {addedFile}
                 </div>
             )} */}
-      <span className="">{messageText}</span>
-      <span className="text-end text-gray-200">{formatDate(timestamp)}</span>
-    </span>
+        <span>{messageText}</span>
+        <span className="text-end text-gray-700">{formatDate(timestamp)}</span>
+      </div>
+      {isMenuOpen && (
+        <MessageContextMenu
+          position={menuPosition}
+          onClose={() => setMenuOpen(false)}
+          messageId={id}
+          ref={menuRef}
+        />
+      )}
+    </>
   );
-})
+});
