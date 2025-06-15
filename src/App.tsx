@@ -8,7 +8,7 @@ function App() {
   return (
     <Provider messageStore={messageStore}>
       <div className="flex justify-center">
-        <div className="grid grid-cols-6 grid-rows-3 border rounded-xl py-2 px-4 gap-2 h-screen w-3/4 bg-green-500/20">
+        <div className="grid grid-cols-6 grid-rows-3 border rounded-xl py-2 px-4 gap-2 h-screen w-3/4  bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 bg-fixed">
           <MessageList />
           <UserPickerMenu />
           <MessageComposer />
