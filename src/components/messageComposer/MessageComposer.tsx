@@ -4,7 +4,7 @@ import CommandMenu from "../commandMenu/CommandMenu";
 
 export default function MessageComposer() {
   const [messageText, setMessageText] = useState("");
-  const [showMenu, setShowMenu] = useState(false);
+  const [showCommandMenu, setShowCommandMenu] = useState(false);
 
   const handleSendMessage = () => {
     messageStore.addMessage(messageText);
@@ -45,7 +45,7 @@ export default function MessageComposer() {
         <button
           type="button"
           className="shrink cursor-pointer p-1 rounded-full text-gray-700 bg-white active:translate-y-1 transition duration-100 ease-in-out"
-          onClick={() => setShowMenu(!showMenu)}
+          onClick={() => setShowCommandMenu(!showCommandMenu)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +59,7 @@ export default function MessageComposer() {
           </svg>
         </button>
         <button
-          onClick={handleSendMessage}
+          onClick={() => handleSendMessage()}
           className="shrink cursor-pointer p-1 rounded-full text-blue-700 bg-white active:translate-y-1 transition duration-100 ease-in-out"
         >
           <svg
@@ -74,7 +74,7 @@ export default function MessageComposer() {
           </svg>
         </button>
       </div>
-      {showMenu && <CommandMenu />}
+      {showCommandMenu && <CommandMenu/>}
     </div>
   );
 }

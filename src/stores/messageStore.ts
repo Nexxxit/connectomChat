@@ -54,6 +54,20 @@ class MessageStore {
   deleteMessage(id: number) {
     this.messages = this.messages.filter((message) => message.id !== id);
   }
+
+  addBotMessage(messageText: string) {
+    if (messageText.trim() === "") return;
+
+    const botMessage: Message = {
+      id: Date.now(),
+      userPicture: 'https://i.pinimg.com/736x/97/19/70/971970605fc12e0a49676699bf2137fc.jpg',
+      userName: 'Bot',
+      messageText: messageText.trim(),
+      timestamp: new Date(),
+    };
+
+    this.messages = [...this.messages, botMessage];
+  }
 }
 
 export const messageStore = new MessageStore();
