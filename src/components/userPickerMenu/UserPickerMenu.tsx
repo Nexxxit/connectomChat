@@ -21,14 +21,14 @@ export default observer(function UserPickerMenu() {
           {
             userName: "user1",
             userPicture:
-              "https://steamuserimages-a.akamaihd.net/ugc/1806529912255160538/5F20B565707FF4F5E5F6E0E5E4C47A297B08161D/?imw=512&amp;imh=341&amp;ima=fit&amp;impolicy=Letterbox&amp;imcolor=%23000000&amp;letterbox=true",
-            checked: false,
+              "https://avatars.mds.yandex.net/i?id=eae74698d024c34c7350f8127284d98d_l-4033630-images-thumbs&n=13",
+            checked: true,
           },
           {
             userName: "user2",
             userPicture:
               "https://avatars.mds.yandex.net/get-yapic/43978/Gi2hpA5z8CclqDzPKMMeVZB39Lw-1/orig",
-            checked: true,
+            checked: false,
           },
           {
             userName: "user3",
@@ -73,6 +73,7 @@ export default observer(function UserPickerMenu() {
     >
       {loading ? (
         <div className="flex flex-col justify-center items-center gap-4 animate-pulse">
+          <div className="rounded-full bg-gray-200 h-24 w-24"></div>
           <div className="rounded-full bg-gray-200 h-24 w-24"></div>
           <div className="rounded-full bg-gray-200 h-24 w-24"></div>
           <div className="rounded-full bg-gray-200 h-24 w-24"></div>
