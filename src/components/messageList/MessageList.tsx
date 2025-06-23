@@ -32,6 +32,8 @@ export default observer(function MessageList() {
           userName={message.userName}
           messageText={message.messageText}
           timestamp={message.timestamp}
+          image={message.image}
+          link={message.link}
         />
       ))}
     </div>

@@ -8,6 +8,8 @@ interface MessageProps {
   userName: string;
   messageText: string;
   timestamp: Date;
+  image?: string[];
+  link?: string[];
   // file?: File;
 }
 
@@ -17,6 +19,8 @@ export default observer(function Message({
   userName,
   messageText,
   timestamp,
+  image,
+  link,
 }: MessageProps) {
   // const [addedFile, setAddedFile] = useState<File | null>()
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -110,6 +114,13 @@ export default observer(function Message({
                     {addedFile}
                 </div>
             )} */}
+        {image && (
+          <span>
+            {image?.map((img) => (
+              <img key={img} src={img} className="max-w-xs md:max-w-md block mt-2" />
+            ))}
+          </span>
+        )}
         <span>{messageText}</span>
         <span className="text-end text-gray-700">{formatDate(timestamp)}</span>
       </div>
