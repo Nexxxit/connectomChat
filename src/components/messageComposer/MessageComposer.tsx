@@ -5,10 +5,19 @@ import CommandMenu from "../commandMenu/CommandMenu";
 export default function MessageComposer() {
   const [messageText, setMessageText] = useState("");
   const [showCommandMenu, setShowCommandMenu] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
-  const handleSendMessage = () => {
-    messageStore.addMessage(messageText);
+  const handleSendMessage = (text: string = messageText) => {
+    if(isSending) return;
+
+    setIsSending(true);
+    messageStore.addMessage(text);
     setMessageText("");
+
+    setTimeout(() => {
+      messageStore.addBotMessage();
+      setIsSending(false);
+    }, 300);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -74,7 +83,7 @@ export default function MessageComposer() {
           </svg>
         </button>
       </div>
-      {showCommandMenu && <CommandMenu/>}
+      {showCommandMenu && <CommandMenu handleSendCommand={handleSendMessage} />}
     </div>
   );
 }
