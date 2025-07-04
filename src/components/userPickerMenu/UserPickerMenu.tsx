@@ -60,10 +60,6 @@ export default observer(function UserPickerMenu() {
     getMockData();
   }, []);
 
-  const handleChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
-    messageStore.setSelectedUser(e.target.value);
-  };
-
   return (
     <aside
       className="row-span-4 col-[7_/_span_1] shadow p-2 rounded-xl flex flex-col gap-3  bg-gray-900/80
@@ -84,8 +80,6 @@ export default observer(function UserPickerMenu() {
             key={user.userName}
             userName={user.userName}
             userPicture={user.userPicture}
-            checked={messageStore.selectedUser?.userName === user.userName}
-            onChange={handleChangeUser}
           />
         ))
       )}
