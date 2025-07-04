@@ -14,7 +14,8 @@ export interface Message {
     file?: File;
     images?: string[];
     links?: LinkProps[];
-    buttons?: string[];
+    variants?: string[];
+    buttons?: ButtonAction[];
 }
 
 export interface LinkProps {
@@ -22,11 +23,18 @@ export interface LinkProps {
     linkText: string;
 }
 
+interface ButtonAction {
+    type: 'action' | 'openModal';
+    btnText: string;
+    iframeLink?: string;
+}
+
 interface BotResponse {
     textMessage: string;
     images?: string[];
     links?: LinkProps[];
-    buttons?: string[];
+    variants?: string[];
+    buttons?: ButtonAction[];
 }
 
 interface CommandHandler {
@@ -60,10 +68,30 @@ class MessageStore {
             immediateResponse: "Hello!",
         },
         {
+            trigger: "/info",
+            label: "Изучить модалку",
+            immediateResponse: {
+                textMessage: 'Кнопка открывает модалку',
+                buttons: [
+                    {
+                        type: "openModal",
+                        btnText: "Опен",
+                        iframeLink: "https://doka.guide/html/iframe/"
+                    },
+                    {
+                        type: "openModal",
+                        btnText: "ddd",
+                        iframeLink: "https://habr.com/ru/companies/yandex/articles/276035/"
+                    }
+                ]
+            }
+        },
+        {
             trigger: "/sendImage",
             label: "Отправь картинку",
             immediateResponse: {
-                textMessage: 'Image for you', images: [
+                textMessage: 'Image for you',
+                images: [
                     "https://live.staticflickr.com/6056/6878030444_3442d89ce1_b.jpg",
                     "https://i.redd.it/4blew0edyw711.jpg",
                 ]
@@ -73,7 +101,8 @@ class MessageStore {
             trigger: "/sendLink",
             label: "Отправь ссылки",
             immediateResponse: {
-                textMessage: "Link for you", links: [
+                textMessage: "Link for you",
+                links: [
                     {
                         href: "https://www.youtube.com/watch?v=HIcSWuKMwOw",
                         linkText: "Открыть ссылку",
@@ -165,6 +194,8 @@ class MessageStore {
         }
     ]
 
+    isModalOpen = false;
+    modalContent: string | undefined = undefined;
 
     constructor() {
         makeAutoObservable(this);
@@ -229,7 +260,7 @@ class MessageStore {
 
         const botMessage: BotResponse = {
             textMessage: step.question,
-            buttons: step.type === 'options'
+            variants: step.type === 'options'
                 ? step.options!.map(opt => opt.label)
                 : undefined
         };
@@ -306,12 +337,24 @@ class MessageStore {
                     timestamp: new Date(),
                     images: !isString ? response.images : undefined,
                     links: !isString ? response.links : undefined,
+                    variants: !isString ? response.variants :  undefined,
                     buttons: !isString ? response.buttons : undefined,
                 };
 
                 this.messages = [...this.messages, botMessage];
             })
         }, 300)
+    }
+
+    openModal(contentLink: string) {
+        runInAction(() => {
+            this.modalContent = contentLink;
+            this.isModalOpen = true;
+        })
+    }
+
+    closeModal() {
+        this.isModalOpen = false;
     }
 
 

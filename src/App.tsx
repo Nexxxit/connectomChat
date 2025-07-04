@@ -1,8 +1,10 @@
 import { Provider } from "mobx-react";
+import { observer } from "mobx-react-lite";
 import MessageComposer from "./components/messageComposer/MessageComposer";
 import MessageList from "./components/messageList/MessageList";
 import UserPickerMenu from "./components/userPickerMenu/UserPickerMenu";
 import { messageStore } from "./stores/messageStore";
+import {Modal} from "./components/modal/Modal.tsx";
 
 function App() {
   return (
@@ -14,8 +16,13 @@ function App() {
           <MessageComposer />
         </div>
       </div>
+      <Modal
+          iframeLink={messageStore.modalContent || ''}
+          isOpen={messageStore.isModalOpen}
+          onClose={() => messageStore.closeModal()}
+      />
     </Provider>
   );
 }
 
-export default App;
+export default observer (App);

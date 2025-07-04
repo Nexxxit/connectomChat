@@ -12,6 +12,7 @@ export default observer(function Message({
                                              timestamp,
                                              images,
                                              links,
+                                             variants,
                                              buttons,
                                          }: Message) {
     const [isMenuOpen, setMenuOpen] = useState(false);
@@ -110,12 +111,20 @@ export default observer(function Message({
                 <span>{messageText}</span>
                 <span className="text-end text-gray-700">{formatDate(timestamp)}</span>
             </div>
-            {links?.map((link) => (
-                <BotButton key={link.href} link={link.href} text={link.linkText}/>
+            {links?.map((link,index) => (
+                <BotButton key={index} link={link.href} text={link.linkText}/>
             ))}
-            {buttons?.map((btn) => (
-                <BotButton key={btn} text={btn}/>
+            {variants?.map((variant, index) => (
+                <BotButton key={index} text={variant}/>
             ))}
+            {buttons?.map((btn, index) => {
+                if(btn.type === "openModal") {
+                    return <BotButton key={index} text={btn.btnText} iframeLink={btn.iframeLink}/>
+                } else if (btn.type === "action") {
+                    return <BotButton key={index} text={btn.btnText} />
+                }
+                return null;
+            })}
             {isMenuOpen && (
                 <MessageContextMenu
                     position={menuPosition}

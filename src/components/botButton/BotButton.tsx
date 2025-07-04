@@ -4,9 +4,10 @@ import {messageStore} from "../../stores/messageStore.ts";
 interface BotButtonProps {
     text: string;
     link?: string;
+    iframeLink?: string;
 }
 
-export default function BotButton({link, text}: BotButtonProps) {
+export default function BotButton({link, text, iframeLink}: BotButtonProps) {
     return (
         <>
             {link ? (
@@ -55,8 +56,11 @@ export default function BotButton({link, text}: BotButtonProps) {
                     <span className="text-center">{text}</span>
                 </a>
             ) : (
-                <span
-                    onClick={() => messageStore.handleFormStep(text)}
+                <button
+                    onClick={iframeLink
+                        ? () => messageStore.openModal(iframeLink)
+                        : () => messageStore.handleFormStep(text)
+                    }
                     className="
             inline-flex
             items-center
@@ -80,7 +84,7 @@ export default function BotButton({link, text}: BotButtonProps) {
             pr-10
             me-10
             cursor-pointer
-            ">{text}</span>
+            ">{text}</button>
             )}
         </>
     );

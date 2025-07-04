@@ -34,6 +34,7 @@ export default observer(function MessageList() {
           timestamp={message.timestamp}
           images={message.images}
           links={message.links}
+          variants={message.variants}
           buttons={message.buttons}
         />
       ))}
